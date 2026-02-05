@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-react/
+*.exe
+*.dmg
+*.app
+
+# Python
+python/dist/
+python/build/
+python/__pycache__/
+__pycache__/
+*.py[cod]
+*.spec
+venv/
+.venv/
+*.egg-info/
+
+# Vite
+.vite/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Electron
+*.asar
+
+# Misc
+*.bak
+*.tmp
+*.temp

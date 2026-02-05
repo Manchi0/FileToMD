@@ -1,0 +1,57 @@
+{
+  "name": "docling-converter",
+  "version": "1.0.0",
+  "description": "Desktop app for converting documents to Markdown using Docling",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run vite\" \"npm run electron:dev\"",
+    "vite": "vite",
+    "electron:dev": "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .",
+    "build": "vite build && electron-builder",
+    "build:python": "node scripts/build-python.js",
+    "build:all": "npm run build:python && npm run build"
+  },
+  "build": {
+    "appId": "com.snocorp.docling-converter",
+    "productName": "Docling Converter",
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [
+      {
+        "from": "python/dist/converter",
+        "to": "python",
+        "filter": ["**/*"]
+      }
+    ],
+    "files": [
+      "electron/**/*",
+      "dist-react/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/icon.icns"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "vite": "^5.0.10",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
