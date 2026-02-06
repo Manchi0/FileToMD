@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 let mainWindow;
 let pythonProcess = null;
@@ -18,13 +19,14 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
     },
-    title: 'Docling Converter',
+    title: 'FileToMD',
     show: false,
   });
 
   // Load the app
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173');
+    mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(__dirname, '../dist-react/index.html'));
   }
@@ -135,12 +137,48 @@ ipcMain.handle('start-conversion', async (event, { inputPaths, outputFolder }) =
     const pythonPath = getPythonPath();
     const converterScript = getConverterScript();
 
+    // Debug logging
+    console.log('=== Conversion Debug Info ===');
+    console.log('isDev:', isDev);
+    console.log('pythonPath:', pythonPath);
+    console.log('converterScript:', converterScript);
+    console.log('process.resourcesPath:', process.resourcesPath);
+    console.log('inputPaths:', inputPaths);
+    console.log('outputFolder:', outputFolder);
+
     let args;
     if (isDev) {
       args = [converterScript, '--input', ...inputPaths, '--output', outputFolder];
     } else {
       args = ['--input', ...inputPaths, '--output', outputFolder];
     }
+
+    console.log('Command:', pythonPath);
+    console.log('Args:', args);
+
+    // Check if Python executable exists
+    if (!fs.existsSync(pythonPath)) {
+      console.error('ERROR: Python executable not found at:', pythonPath);
+      console.log('Checking Resources directory contents:');
+      try {
+        const resourcesDir = process.resourcesPath;
+        const pythonDir = path.join(resourcesDir, 'python');
+        console.log('Resources path:', resourcesDir);
+        if (fs.existsSync(pythonDir)) {
+          console.log('Python directory exists. Contents:', fs.readdirSync(pythonDir));
+        } else {
+          console.log('Python directory does NOT exist at:', pythonDir);
+        }
+      } catch (e) {
+        console.error('Error checking directories:', e);
+      }
+    } else {
+      console.log('✓ Python executable exists');
+      const stats = fs.statSync(pythonPath);
+      console.log('File size:', stats.size, 'bytes');
+      console.log('Is executable:', (stats.mode & 0o111) !== 0);
+    }
+    console.log('============================');
 
     try {
       if (isDev) {

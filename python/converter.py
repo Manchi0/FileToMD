@@ -105,6 +105,9 @@ def convert_file(input_file: Path, output_file: Path) -> bool:
         return True
 
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"DEBUG ERROR:\n{error_details}", file=sys.stderr, flush=True)
         emit_status("error", str(e), str(input_file), error=str(e))
         return False
 

@@ -14,15 +14,12 @@ console.log('Building Python converter with PyInstaller...');
 // Change to python directory
 process.chdir(pythonDir);
 
-// PyInstaller command
+// PyInstaller command - use venv and spec file
 const pyinstallerCmd = [
-  'pyinstaller',
-  '--onedir',
-  '--name', 'converter',
+  './venv/bin/pyinstaller',
   '--clean',
   '--noconfirm',
-  '--console',  // Keep console for JSON output
-  'converter.py'
+  'converter.spec'
 ].join(' ');
 
 try {

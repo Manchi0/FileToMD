@@ -39,6 +39,7 @@ Desktop.ini
 *.swp
 *.swo
 *~
+.claude/
 
 # Environment
 .env
